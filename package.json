@@ -34,7 +34,7 @@
     "yargs": "^7.0.2"
   },
   "bin": {
-    "tagver": "./index.js"
+    "tagver": "bin/tagver"
   },
   "preferGlobal": true
 }

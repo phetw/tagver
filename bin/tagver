@@ -4,7 +4,7 @@
 
 const yargs = require('yargs');
 const chalk = require('chalk');
-const api = require('./api');
+const api = require('../api');
 const options = Object.create(null);
 
 const argv = yargs
