@@ -32,10 +32,16 @@ options.message = argv.message;
 if (command) {
   api.bump(command, options)
   .then(version => console.log(version))
-  .catch(error => console.error(chalk.red(error)));
+  .catch(error => {
+    console.error(chalk.red(error));
+    process.exit(1);
+  });
 }
 else {
   api.version(options)
   .then(version => version ? console.log(version) : Promise.reject('No version found'))
-  .catch(error => console.error(chalk.red(error)));
+  .catch(error => {
+    console.error(chalk.red(error));
+    process.exit(1);
+  });
 }
