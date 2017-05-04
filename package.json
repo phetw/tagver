@@ -1,6 +1,6 @@
 {
   "name": "tagver",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "semver tagging control for git",
   "main": "api.js",
   "scripts": {
