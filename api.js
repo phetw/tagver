@@ -7,9 +7,9 @@ const releaseTypes = ['major', 'minor', 'patch'];
 const defaultOptions = {
   cwd: process.cwd(),
   tag: true,
-  publish: true
+  publish: true,
+  message: 'Release v%s'
 };
-
 
 // Checks to see if a valid release type is passed
 const validBumper = releaseType => {
