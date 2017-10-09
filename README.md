@@ -24,6 +24,8 @@ Bumps the version based on the input.
 
 Input can be a valid semver version number, or, release type.
 
+returns: `Promise`
+
 ``` javascript
 tagver.bump('1.2.3').then(version => console.log(version));
 tagver.bump('major').then(version => console.log(version));
@@ -41,9 +43,6 @@ tagver.bump('patch').then(version => console.log(version));
   message: 'Release v%s' // Custom tag message. %s will be replaced with the version number
 }
 ```
-
-returns: `Promise`
-
 
 ## Cli Usage
 
