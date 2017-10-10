@@ -1,7 +1,7 @@
 'use strict';
 
 const semver = require('semver');
-const git = require('./git');
+const git = require('./git-helper');
 const releaseTypes = ['major', 'minor', 'patch'];
 
 const defaultOptions = {
