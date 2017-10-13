@@ -2,14 +2,9 @@
 
 const semver = require('semver');
 const git = require('./git-helper');
+const defaultOptions = require('./options');
 const releaseTypes = ['major', 'minor', 'patch'];
 
-const defaultOptions = {
-  cwd: process.cwd(),
-  tag: true,
-  publish: true,
-  message: 'Release v%s'
-};
 
 // Checks to see if a valid release type is passed
 const validBumper = releaseType => {
@@ -46,10 +41,10 @@ const bump = (nextVersion, options) => checkOptions(options)
 
   // major, minor, patch
   else if (validBumper(nextVersion)) {
-    if (!currentVersion) {
+    if (!currentVersion && !semver.valid(options.base)) {
       return Promise.reject('No version can be found and therefore it cannot be bumped!');
     }
-    return semver.inc(currentVersion, nextVersion);
+    return semver.inc(currentVersion || options.base, nextVersion);
   }
 
   // error

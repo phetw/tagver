@@ -5,6 +5,7 @@
 const yargs = require('yargs');
 const chalk = require('chalk');
 const api = require('../api');
+const defaultOptions = require('../options');
 const options = Object.create(null);
 
 const argv = yargs
@@ -12,12 +13,18 @@ const argv = yargs
 .command('major', 'Bump the major version.')
 .command('minor', 'Bump the minor version.')
 .command('patch', 'Bump the patch version.')
-.command('x.x.x', 'Bump to the specified version.')
+.command('x.x.x', 'Bump to the specified semver version.')
 .option('message', {
   alias: 'm',
   string: true,
-  default: 'Release v%s',
+  default: defaultOptions.message,
   description: 'Optional message to use for git tags'
+})
+.option('base', {
+  alias: 'b',
+  string: true,
+  default: defaultOptions.base,
+  description: 'Initial version to increment when no version is found'
 })
 .help()
 .version()
