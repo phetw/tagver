@@ -126,8 +126,20 @@ Optional message to use for git tags.
 
 `%s` will be replaced with the version number.
 
+default: `Release v%s`
+
 ``` shell
 $ tagver patch -m "Auto release package [v%s]"
+```
+
+### --base, -b option
+
+Optional version to increment when no version is found.
+
+default: `0.0.0`
+
+``` shell
+$ tagver patch -b "1.0.0"
 ```
 
 ### --no-git-tag option
