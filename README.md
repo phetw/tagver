@@ -1,4 +1,10 @@
 # tagver
+
+[![Package Quality](http://npm.packagequality.com/shield/tagver.svg)](http://packagequality.com/#?package=tagver)
+[![Dependencies](https://img.shields.io/david/TremayneChrist/tagver.svg)](https://david-dm.org/tremaynechrist/tagver)
+<!--![Dependencies](https://img.shields.io/librariesio/github/TremayneChrist/tagver.svg)-->
+<!--![Package Quality](https://img.shields.io/versioneye/d/nodejs/tagver.svg)-->
+
 semver tagging control for git
 
 tagver gets/sets git version tags, using semantic versioning (semver).
