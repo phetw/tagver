@@ -41,7 +41,7 @@ const command = argv._[0];
 options.tag = argv.gitTag !== false;
 options.publish = !options.tag ? false : argv.gitPublish !== false;
 options.message = argv.message;
-options.filter = argv.filter || defaultOptions.filter;
+options.filter = argv.filter;
 
 if (command) {
   api.bump(command, options)
