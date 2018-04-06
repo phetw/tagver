@@ -28,7 +28,8 @@ tagver.version().then(version => console.log(version));
 
 ``` javascript
 {
-  cwd: './' // Directory which tagver should use for git commands
+  cwd: './',  // Directory which tagver should use for git commands
+  filter: '*' // Semver filter to use. This will return the highest version based on the filter.
 }
 ```
 
@@ -55,7 +56,8 @@ tagver.bump('patch').then(version => console.log(version));
   tag: true,              // Should tagver store a git tag?
   publish: true,          // Should tagver publish new tags to the remote?
   message: 'Release v%s', // Custom tag message. %s will be replaced with the version number
-  base: '0.0.0'           // Initial version to increment when no version is found  
+  base: '0.0.0',          // Initial version to increment when no version is found
+  filter: '*'             // Semver filter to use. This will return the highest version based on the filter.
 }
 ```
 
@@ -146,6 +148,23 @@ default: `0.0.0`
 
 ``` shell
 $ tagver patch -b "1.0.0"
+```
+
+### --filter, -f option
+
+Optional semver filter to use.
+This will return the highest version based on the filter.
+
+default: `*`
+
+``` shell
+$ tagver
+1.2.3
+```
+
+``` shell
+$ tagver -f "<1.2.x"
+1.1.18
 ```
 
 ### --no-git-tag option
