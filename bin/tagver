@@ -26,6 +26,12 @@ const argv = yargs
   default: defaultOptions.base,
   description: 'Initial version to increment when no version is found'
 })
+.option('filter', {
+  alias: 'f',
+  string: true,
+  default: defaultOptions.filter,
+  description: 'Semver filter to use. This will return the highest version based on the filter'
+})
 .help()
 .version()
 .argv;
@@ -35,6 +41,7 @@ const command = argv._[0];
 options.tag = argv.gitTag !== false;
 options.publish = !options.tag ? false : argv.gitPublish !== false;
 options.message = argv.message;
+options.filter = argv.filter;
 
 if (command) {
   api.bump(command, options)
