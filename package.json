@@ -1,6 +1,6 @@
 {
   "name": "tagver",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "semver tagging control for git",
   "main": "api.js",
   "scripts": {
@@ -31,8 +31,8 @@
   },
   "homepage": "https://github.com/TremayneChrist/tagver#readme",
   "dependencies": {
-    "chalk": "^2.1.0",
-    "semver": "^5.4.1",
-    "yargs": "^10.0.3"
+    "chalk": "^2.4.1",
+    "semver": "^5.5.1",
+    "yargs": "^12.0.2"
   }
 }
