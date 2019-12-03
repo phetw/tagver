@@ -40,6 +40,10 @@ const argv = yargs
   string: true,
   description: 'Identifier to be used to prefix premajor, preminor, prepatch or prerelease versions'
 })
+.option('branch', {
+  string: true,
+  description: 'The branch name the tag will refer to. Default\'s your local repository name'
+})
 .help()
 .version()
 .argv;
@@ -52,6 +56,7 @@ options.message = argv.message;
 options.filter = argv.filter;
 options.preid = argv.preid || undefined;
 options.base = argv.base;
+options.branch = argv.branch;
 
 if (command) {
   api(command, options)

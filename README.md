@@ -59,7 +59,8 @@ tagver('prerelease', { preid: 'beta' }).then(version => console.log(version));
   message: 'Release v%s', // Custom tag message. %s will be replaced with the version number
   base: '0.0.0',          // Initial version to increment when no version is found
   filter: '*',            // Semver filter to use. This will return the highest version based on the filter.
-  preid: ''               // Preid to use when prerelease versions 
+  preid: undefined,       // Preid to use when prerelease versions
+  branch: undefined       // Branch name the tag will refer to
 }
 ```
 
@@ -256,3 +257,7 @@ v1.2.3
 ### --no-git-publish option
 
 Prevents tagver from publishing created tags.
+
+### --branch option
+
+Provide the valid branch name the tag will refer to.

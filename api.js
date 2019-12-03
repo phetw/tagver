@@ -61,7 +61,7 @@ const bump = (nextVersion, options) => checkOptions(options)
         return git.tag(`v${version}`, `${options.message.replace(/\%s/g, version) || version}`, options.publish, options);
       }
       else {
-        return Promise.reject('Cannot tag as your local repository is not in sync with its remote');
+        return Promise.reject(`Cannot tag as ${options.branch || 'your local'} repository is not in sync with its remote`);
       }
     })
     .then(() => {
