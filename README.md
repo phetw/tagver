@@ -33,11 +33,11 @@ tagver().then(version => console.log(version));
 }
 ```
 
-### tagver(input[, options])
+### tagver(version[, options])
 
 Bumps the version based on the input.
 
-Input can be a valid semver version number, or, release type.
+Version can be a valid semver version number, or, release type.
 
 returns: `Promise`
 
@@ -60,7 +60,7 @@ tagver('prerelease', { preid: 'beta' }).then(version => console.log(version));
   base: '0.0.0',          // Initial version to increment when no version is found
   filter: '*',            // Semver filter to use. This will return the highest version based on the filter.
   preid: undefined,       // Preid to use when prerelease versions
-  branch: undefined       // Branch name the tag will refer to
+  branch: undefined       // Remote branch used to compare local changes against
 }
 ```
 
@@ -260,4 +260,4 @@ Prevents tagver from publishing created tags.
 
 ### --branch option
 
-Provide the valid branch name the tag will refer to.
+Remote branch used to compare local changes against. Cannot tag unless remote and local repositories are in sync. Defaults to the default remote branch, usually master.

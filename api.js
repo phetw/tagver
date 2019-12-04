@@ -21,17 +21,17 @@ const checkOptions = options => new Promise((resolve, reject) => {
 
 
 // version - returns the current version number, if there is one.
-const version = options => checkOptions(options)
+const latestVersionTag = options => checkOptions(options)
 .then(options => git.latestVersionTag(options));
 
 
 // bump - bumps up the version number.
-const bump = (nextVersion, options) => checkOptions(options)
-.then(options => version(options).then(currentVersion => {
+const bump = (version, options) => checkOptions(options)
+.then(options => latestVersionTag(options).then(currentVersion => {
   // x.x.x
-  if (semver.valid(nextVersion)) {
-    if (!currentVersion || semver.gt(nextVersion, currentVersion)) {
-      return nextVersion;
+  if (semver.valid(version)) {
+    if (!currentVersion || semver.gt(version, currentVersion)) {
+      return version;
     }
     else {
       return Promise.reject('Version number must be greater than the current version!');
@@ -39,11 +39,11 @@ const bump = (nextVersion, options) => checkOptions(options)
   }
 
   // major, minor, patch, preminor, patch, prepatch, or prerelease
-  else if (validBumper(nextVersion)) {
+  else if (validBumper(version)) {
     if (!currentVersion && !semver.valid(options.base)) {
       return Promise.reject('No version can be found and therefore it cannot be bumped!');
     }
-    return semver.inc(currentVersion || options.base, nextVersion, options.preid);
+    return semver.inc(currentVersion || options.base, version, options.preid);
   }
 
   // error
@@ -61,7 +61,7 @@ const bump = (nextVersion, options) => checkOptions(options)
         return git.tag(`v${version}`, `${options.message.replace(/\%s/g, version) || version}`, options.publish, options);
       }
       else {
-        return Promise.reject(`Cannot tag as ${options.branch || 'your local'} repository is not in sync with its remote`);
+        return Promise.reject(`Cannot tag as your local repository is not in sync with its remote '${git.branch(options)}' branch.`);
       }
     })
     .then(() => {
@@ -75,14 +75,14 @@ const bump = (nextVersion, options) => checkOptions(options)
 })));
 
 /** DEPRECATED */
-module.exports = { version, bump };
+module.exports = { version: latestVersionTag, bump };
 
 /**
  * API
- * @param {String} [nextVersion] If defined bumps up the version number, otherwise return the current version
+ * @param {String} [version] If defined bumps up the version number, otherwise return the current version
  * @param {Object} [options] Options to pass to check/bump the version
  * @returns {Promise} promise
  */
-module.exports = function (nextVersion, options) {
-  return typeof nextVersion === 'string' ? bump(nextVersion, options) : version(options);
+module.exports = function (version, options) {
+  return typeof version === 'string' ? bump(version, options) : latestVersionTag(options);
 };

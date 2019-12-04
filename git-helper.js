@@ -34,7 +34,7 @@ exec('git tag --list', options)
 
 // Tags the repository at the current state
 const tag = (tag, message, push, options) =>
-exec(`git tag -a ${tag} -m "${message}" ${options.branch || ''}`, options)
+exec(`git tag -a ${tag} -m "${message}"`, options)
 .then(() => {
   if (push) {
     return exec('git push --tags', options);
@@ -42,11 +42,11 @@ exec(`git tag -a ${tag} -m "${message}" ${options.branch || ''}`, options)
 }).then(() => tag);
 
 
-// Gets the provided branch or the current branch
+// Gets the default or provided branch
 const branch = options => options.branch || exec('git rev-parse --abbrev-ref HEAD', options);
 
 
-// Checks to see if the repository is clean
+// Checks to see if the current local state of the repository is in sync with its remote
 const checkStatus = options =>
 fetch(options).then(() => branch(options)).then(branch =>
 exec(`git status --porcelain && git log ${branch}..origin/${branch} --oneline`, options))

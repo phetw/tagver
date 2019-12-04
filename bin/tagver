@@ -42,7 +42,7 @@ const argv = yargs
 })
 .option('branch', {
   string: true,
-  description: 'The branch name the tag will refer to. Default\'s your local repository name'
+  description: 'Remote branch used to compare local changes against'
 })
 .help()
 .version()
