@@ -13,6 +13,10 @@ const argv = yargs
 .command('major', 'Bump the major version.')
 .command('minor', 'Bump the minor version.')
 .command('patch', 'Bump the patch version.')
+.command('premajor', 'Bump the pre major version.')
+.command('preminor', 'Bump the pre minor version.')
+.command('prepatch', 'Bump the pre patch version.')
+.command('prerelease', 'Bump the pre release version.')
 .command('x.x.x', 'Bump to the specified semver version.')
 .option('message', {
   alias: 'm',
@@ -32,6 +36,14 @@ const argv = yargs
   default: defaultOptions.filter,
   description: 'Semver filter to use. This will return the highest version based on the filter'
 })
+.option('preid', {
+  string: true,
+  description: 'Identifier to be used to prefix premajor, preminor, prepatch or prerelease versions'
+})
+.option('branch', {
+  string: true,
+  description: 'Remote branch used to compare local changes against'
+})
 .help()
 .version()
 .argv;
@@ -42,9 +54,12 @@ options.tag = argv.gitTag !== false;
 options.publish = !options.tag ? false : argv.gitPublish !== false;
 options.message = argv.message;
 options.filter = argv.filter;
+options.preid = argv.preid || undefined;
+options.base = argv.base;
+options.branch = argv.branch;
 
 if (command) {
-  api.bump(command, options)
+  api(command, options)
   .then(version => console.log(version))
   .catch(error => {
     console.error(chalk.red(error));
@@ -52,7 +67,7 @@ if (command) {
   });
 }
 else {
-  api.version(options)
+  api(options)
   .then(version => version ? console.log(version) : Promise.reject('No version found'))
   .catch(error => {
     console.error(chalk.red(error));

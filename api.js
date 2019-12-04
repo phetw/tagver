@@ -3,7 +3,7 @@
 const semver = require('semver');
 const git = require('./git-helper');
 const defaultOptions = require('./options');
-const releaseTypes = ['major', 'minor', 'patch'];
+const releaseTypes = ['major', 'minor', 'patch', 'premajor', 'preminor', 'prepatch', 'prerelease'];
 
 
 // Checks to see if a valid release type is passed
@@ -20,31 +20,30 @@ const checkOptions = options => new Promise((resolve, reject) => {
 });
 
 
-// API: version - returns the current version number, if there is one.
-const version = options => checkOptions(options)
+// version - returns the current version number, if there is one.
+const latestVersionTag = options => checkOptions(options)
 .then(options => git.latestVersionTag(options));
 
 
-// API: bump - bumps up the version number.
-const bump = (nextVersion, options) => checkOptions(options)
-.then(options => version(options).then(currentVersion => {
-
+// bump - bumps up the version number.
+const bump = (version, options) => checkOptions(options)
+.then(options => latestVersionTag(options).then(currentVersion => {
   // x.x.x
-  if (semver.valid(nextVersion)) {
-    if (!currentVersion || semver.gt(nextVersion, currentVersion)) {
-      return nextVersion;
+  if (semver.valid(version)) {
+    if (!currentVersion || semver.gt(version, currentVersion)) {
+      return version;
     }
     else {
       return Promise.reject('Version number must be greater than the current version!');
     }
   }
 
-  // major, minor, patch
-  else if (validBumper(nextVersion)) {
+  // major, minor, patch, preminor, patch, prepatch, or prerelease
+  else if (validBumper(version)) {
     if (!currentVersion && !semver.valid(options.base)) {
       return Promise.reject('No version can be found and therefore it cannot be bumped!');
     }
-    return semver.inc(currentVersion || options.base, nextVersion);
+    return semver.inc(currentVersion || options.base, version, options.preid);
   }
 
   // error
@@ -62,7 +61,7 @@ const bump = (nextVersion, options) => checkOptions(options)
         return git.tag(`v${version}`, `${options.message.replace(/\%s/g, version) || version}`, options.publish, options);
       }
       else {
-        return Promise.reject('Cannot tag as your local repository is not in sync with its remote');
+        return git.branch(options).then(branch => Promise.reject(`Cannot tag as your local repository is not in sync with its remote '${branch}' branch.`));
       }
     })
     .then(() => {
@@ -75,4 +74,15 @@ const bump = (nextVersion, options) => checkOptions(options)
   }
 })));
 
-module.exports = { version, bump };
+/** DEPRECATED */
+module.exports = { version: latestVersionTag, bump };
+
+/**
+ * API
+ * @param {String} [version] If defined bumps up the version number, otherwise return the current version
+ * @param {Object} [options] Options to pass to check/bump the version
+ * @returns {Promise} promise
+ */
+module.exports = function (version, options) {
+  return typeof version === 'string' ? bump(version, options) : latestVersionTag(options);
+};

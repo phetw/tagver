@@ -42,11 +42,11 @@ exec(`git tag -a ${tag} -m "${message}"`, options)
 }).then(() => tag);
 
 
-// Gets the current branch
-const branch = options => exec('git rev-parse --abbrev-ref HEAD', options);
+// Gets the default or provided branch
+const branch = options => options.branch ? Promise.resolve(options.branch) : exec('git rev-parse --abbrev-ref HEAD', options);
 
 
-// Checks to see if the current local repository is clean
+// Checks to see if the current local state of the repository is in sync with its remote
 const checkStatus = options =>
 fetch(options).then(() => branch(options)).then(branch =>
 exec(`git status --porcelain && git log ${branch}..origin/${branch} --oneline`, options))

@@ -14,14 +14,14 @@ By default, tagver will bump, tag and push updated version tags to the git repos
 
 ## Node API
 
-### tagver.version([options])
+### tagver([options])
 
 Gets the current highest semver version tag from git
 
 returns: `Promise`
 
 ``` javascript
-tagver.version().then(version => console.log(version));
+tagver().then(version => console.log(version));
 ```
 
 #### options
@@ -33,19 +33,20 @@ tagver.version().then(version => console.log(version));
 }
 ```
 
-### tagver.bump(input[, options])
+### tagver(version[, options])
 
 Bumps the version based on the input.
 
-Input can be a valid semver version number, or, release type.
+Version can be a valid semver version number, or, release type.
 
 returns: `Promise`
 
 ``` javascript
-tagver.bump('1.2.3').then(version => console.log(version));
-tagver.bump('major').then(version => console.log(version));
-tagver.bump('minor').then(version => console.log(version));
-tagver.bump('patch').then(version => console.log(version));
+tagver('1.2.3').then(version => console.log(version));
+tagver('major').then(version => console.log(version));
+tagver('minor').then(version => console.log(version));
+tagver('patch').then(version => console.log(version));
+tagver('prerelease', { preid: 'beta' }).then(version => console.log(version));
 ```
 
 #### options
@@ -57,7 +58,9 @@ tagver.bump('patch').then(version => console.log(version));
   publish: true,          // Should tagver publish new tags to the remote?
   message: 'Release v%s', // Custom tag message. %s will be replaced with the version number
   base: '0.0.0',          // Initial version to increment when no version is found
-  filter: '*'             // Semver filter to use. This will return the highest version based on the filter.
+  filter: '*',            // Semver filter to use. This will return the highest version based on the filter.
+  preid: undefined,       // Preid to use when prerelease versions
+  branch: undefined       // Remote branch used to compare local changes against
 }
 ```
 
@@ -128,6 +131,54 @@ $ tagver patch
 1.2.4
 ```
 
+### tagver premajor
+
+Bumps the pre-release major version
+
+``` shell
+$ tagver
+1.2.3
+
+$ tagver premajor
+2.0.0-0
+```
+
+### tagver preminor
+
+Bumps the pre-release minor version
+
+``` shell
+$ tagver
+1.2.3
+
+$ tagver preminor
+1.3.0-0
+```
+
+### tagver prepatch
+
+Bumps the pre-release patch version
+
+``` shell
+$ tagver
+1.2.3
+
+$ tagver prepatch
+1.2.4-0
+```
+
+### tagver prerelease
+
+Bumps the pre-release version
+
+``` shell
+$ tagver
+1.2.3-0
+
+$ tagver prerelease
+1.2.3-1
+```
+
 ### --message, -m option
 
 Optional message to use for git tags.
@@ -148,6 +199,18 @@ default: `0.0.0`
 
 ``` shell
 $ tagver patch -b "1.0.0"
+```
+
+### --preid option
+
+Optional identifier to be used to prefix premajor, preminor, prepatch or prerelease version increments.
+
+``` shell
+$ tagver
+1.2.3
+
+$ tagver prepatch --preid next
+1.2.4-next.0
 ```
 
 ### --filter, -f option
@@ -194,3 +257,7 @@ v1.2.3
 ### --no-git-publish option
 
 Prevents tagver from publishing created tags.
+
+### --branch option
+
+Remote branch used to compare local changes against. Cannot tag unless remote and local repositories are in sync. Defaults to the default remote branch, usually master.
