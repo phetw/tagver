@@ -43,7 +43,7 @@ exec(`git tag -a ${tag} -m "${message}"`, options)
 
 
 // Gets the default or provided branch
-const branch = options => options.branch || exec('git rev-parse --abbrev-ref HEAD', options);
+const branch = options => Promise.resolve(options.branch) || exec('git rev-parse --abbrev-ref HEAD', options);
 
 
 // Checks to see if the current local state of the repository is in sync with its remote
