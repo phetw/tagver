@@ -84,5 +84,9 @@ module.exports = { version: latestVersionTag, bump };
  * @returns {Promise} promise
  */
 module.exports = function (version, options) {
+  if (typeof version !== 'string' && arguments.length === 1) {
+    options = version;
+    version = null;
+  }
   return typeof version === 'string' ? bump(version, options) : latestVersionTag(options);
 };
