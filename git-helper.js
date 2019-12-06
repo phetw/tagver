@@ -22,12 +22,12 @@ const fetch = options => exec('git fetch', options).then(() => undefined);
 
 
 // Gets the latest/highest semver version tag
-const latestVersionTag = (options, includePrerelease) =>
+const latestVersionTag = options =>
 exec('git tag --list', options)
 .then(stdout => {
   stdout = stdout.split(/\n/)
   .filter(tag => semver.valid(tag) && semver.satisfies(tag, options.filter, {
-    includePrerelease: includePrerelease === true
+    includePrerelease: options.includePrerelease === true
   })).sort(semver.rcompare)[0];
   return semver.clean(stdout ? stdout.trim() : '') || '';
 });

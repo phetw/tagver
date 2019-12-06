@@ -13,50 +13,49 @@ const validBumper = releaseType => {
 
 
 // Cleans up the options object
-const checkOptions = options => new Promise((resolve, reject) => {
+const checkOptions = options => {
   options = Object.assign({}, defaultOptions, options);
   options.tag = options.tag || options.publish;
-  resolve(options);
-});
+  return Promise.resolve(options);
+};
 
 
 // version - returns the current version number, if there is one.
-const latestVersionTag = (options, includePrerelease) => checkOptions(options)
-.then(options => git.latestVersionTag(options, includePrerelease));
+const latestVersionTag = options => checkOptions(options)
+.then(options => git.latestVersionTag(options));
 
 
 // bump - bumps up the version number.
-const bump = (version, options) => checkOptions(options)
-.then(options => latestVersionTag(options, (/^pre/).test(version)).then(currentVersion => {
-  // x.x.x
-  if (semver.valid(version)) {
-    if (!currentVersion || semver.gt(version, currentVersion)) {
-      return version;
+const bump = (version, options) => checkOptions(options).then(options => {
+  options.includePrerelease = options.includePrerelease || (/^pre/).test(version);
+  return latestVersionTag(options).then(currentVersion => {
+    // x.x.x
+    if (semver.valid(version)) {
+      if (!currentVersion || semver.gt(version, currentVersion)) {
+        return version;
+      }
+      else {
+        return Promise.reject('Version number must be greater than the current version!');
+      }
     }
+    // major, minor, patch, preminor, patch, prepatch, or prerelease
+    else if (validBumper(version)) {
+      if (!currentVersion && !semver.valid(options.base)) {
+        return Promise.reject('No version can be found and therefore it cannot be bumped!');
+      }
+      return semver.inc(currentVersion || options.base, version, options.preid);
+    }
+    // error
     else {
-      return Promise.reject('Version number must be greater than the current version!');
+      return Promise.reject('Invalid version or release type');
     }
-  }
-
-  // major, minor, patch, preminor, patch, prepatch, or prerelease
-  else if (validBumper(version)) {
-    if (!currentVersion && !semver.valid(options.base)) {
-      return Promise.reject('No version can be found and therefore it cannot be bumped!');
-    }
-    return semver.inc(currentVersion || options.base, version, options.preid);
-  }
-
-  // error
-  else {
-    return Promise.reject('Invalid version or release type');
-  }
-
+  });
 })
 
 // Handle any git commands
-.then(version => new Promise((resolve, reject) => {
+.then(version => {
   if (options.tag) {
-    const promise = git.checkStatus(options).then(ok => {
+    return git.checkStatus(options).then(ok => {
       if (ok) {
         return git.tag(`v${version}`, `${options.message.replace(/\%s/g, version) || version}`, options.publish, options);
       }
@@ -67,12 +66,9 @@ const bump = (version, options) => checkOptions(options)
     .then(() => {
       return version;
     });
-    resolve(promise);
   }
-  else {
-    return resolve(version);
-  }
-})));
+  return Promise.resolve(version);
+});
 
 /** DEPRECATED */
 module.exports = { version: latestVersionTag, bump };
