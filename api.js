@@ -21,13 +21,13 @@ const checkOptions = options => new Promise((resolve, reject) => {
 
 
 // version - returns the current version number, if there is one.
-const latestVersionTag = options => checkOptions(options)
-.then(options => git.latestVersionTag(options));
+const latestVersionTag = (options, includePrerelease) => checkOptions(options)
+.then(options => git.latestVersionTag(options, includePrerelease));
 
 
 // bump - bumps up the version number.
 const bump = (version, options) => checkOptions(options)
-.then(options => latestVersionTag(options).then(currentVersion => {
+.then(options => latestVersionTag(options, (/^pre/).test(version)).then(currentVersion => {
   // x.x.x
   if (semver.valid(version)) {
     if (!currentVersion || semver.gt(version, currentVersion)) {
