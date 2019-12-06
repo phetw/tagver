@@ -44,6 +44,10 @@ const argv = yargs
   string: true,
   description: 'Remote branch used to compare local changes against'
 })
+.option('include-prerelease', {
+  boolean: true,
+  description: 'Include prerelease versions when getting version'
+})
 .help()
 .version()
 .argv;
@@ -57,6 +61,7 @@ options.filter = argv.filter;
 options.preid = argv.preid || undefined;
 options.base = argv.base;
 options.branch = argv.branch;
+options.includePrerelease = argv.includePrerelease;
 
 if (command) {
   api(command, options)
