@@ -232,6 +232,14 @@ $ tagver -f "<1.2.x"
 1.1.18
 ```
 
+### --branch option
+
+Remote branch used to compare local changes against. Cannot tag unless remote and local repositories are in sync. Defaults to the default remote branch, usually master.
+
+### --include-prerelease option
+
+Include prerelease versions, when getting tags. This automatically gets set to true when bumping pre versions.
+
 ### --no-git-tag option
 
 Prevents tagver from creating a git tag. This will also prevent any publishing of tags.
@@ -259,11 +267,3 @@ v1.2.3
 ### --no-git-publish option
 
 Prevents tagver from publishing created tags.
-
-### --branch option
-
-Remote branch used to compare local changes against. Cannot tag unless remote and local repositories are in sync. Defaults to the default remote branch, usually master.
-
-### --include-prerelease option
-
-Include prerelease versions, when getting tags. This automatically gets set to true when bumping pre versions.
