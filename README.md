@@ -29,7 +29,8 @@ tagver().then(version => console.log(version));
 ``` javascript
 {
   cwd: './',  // Directory which tagver should use for git commands
-  filter: '*' // Semver filter to use. This will return the highest version based on the filter.
+  filter: '*', // Semver filter to use. This will return the highest version based on the filter.
+  includePrerelease: false // Include prerelease versions, when getting tags. This automatically gets set to true when bumping pre versions.
 }
 ```
 
@@ -60,7 +61,8 @@ tagver('prerelease', { preid: 'beta' }).then(version => console.log(version));
   base: '0.0.0',          // Initial version to increment when no version is found
   filter: '*',            // Semver filter to use. This will return the highest version based on the filter.
   preid: undefined,       // Preid to use when prerelease versions
-  branch: undefined       // Remote branch used to compare local changes against
+  branch: undefined,       // Remote branch used to compare local changes against
+  includePrerelease: false // Include prerelease versions, when getting tags. This automatically gets set to true when bumping pre versions.
 }
 ```
 
@@ -261,3 +263,7 @@ Prevents tagver from publishing created tags.
 ### --branch option
 
 Remote branch used to compare local changes against. Cannot tag unless remote and local repositories are in sync. Defaults to the default remote branch, usually master.
+
+### ---include-prerelease option
+
+Include prerelease versions, when getting tags. This automatically gets set to true when bumping pre versions.
